@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 @RestController
-public class healthController {
+public class HealthController {
 
     @GetMapping("/health")
     public Map<String, String> health(){
