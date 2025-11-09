@@ -77,19 +77,20 @@ public class ClienteController {
 
    @DeleteMapping("/{id}")
     public ResponseEntity<?> inativar(@PathVariable Long id) {
-        try{
-             clienteService.inativar(id);
-             return ResponseEntity.ok().body("Cliente inativado com sucesso");
-        } catch(IllegalArgumentException e) {
-             return ResponseEntity.badRequest().body("Erro" + e.getMessage());
-        } catch (Exception e) {
-             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Erro interno do servidor");
-    }
+       try {
+           clienteService.inativar(id);
+           return ResponseEntity.ok().body("Cliente inativado com sucesso");
+       } catch (IllegalArgumentException e) {
+           return ResponseEntity.badRequest().body("Erro" + e.getMessage());
+       } catch (Exception e) {
+           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                   .body("Erro interno do servidor");
+       }
+   }
 
     // Buscar clientes por nome
 
-       @GetMapping("/buscar}")
+       @GetMapping("/buscar")
        public ResponseEntity<List<Cliente>> buscarPorNome(@RequestParam String nome) {
             List<Cliente> clientes = clienteService.buscarPorNome(nome);
             return ResponseEntity.ok(clientes);
@@ -108,4 +109,4 @@ public class ClienteController {
          }
        }
 }
-}
+
