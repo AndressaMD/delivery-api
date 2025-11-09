@@ -33,5 +33,5 @@ Sistema de delivery desenvolvido com Spring Boot e Java 21.
 - Profile: development
 
 ## 👨‍💻 Desenvolvedor
-Andressa Matos -   
+Andressa Matos - EXTESPDG-AJWW1-57954729
 Desenvolvido com JDK 21 e Spring Boot 3.2.x
