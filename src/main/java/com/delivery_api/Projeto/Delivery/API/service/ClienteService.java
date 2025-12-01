@@ -1,101 +1,32 @@
 package com.delivery_api.Projeto.Delivery.API.service;
 
-import com.delivery_api.Projeto.Delivery.API.entity.Cliente;
-import com.delivery_api.Projeto.Delivery.API.repository.ClienteRepository;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.stereotype.Service;
+import com.delivery_api.Projeto.Delivery.API.dto.request.ClienteRequestDTO;
+import com.delivery_api.Projeto.Delivery.API.dto.response.ClienteResponseDTO;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
+public interface ClienteService {
 
-@Service
-@Transactional
-public class ClienteService {
-    private ClienteRepository clienteRepository;
+   //Cadastrar novo cliente
+   ClienteResponseDTO cadastrar(ClienteRequestDTO dto);
 
-    //Cadastrar novo cliente
+   //Buscar cliente por ID
+   ClienteResponseDTO buscarPorId(Long id);
 
-    public Cliente cadastrar(Cliente cliente) {
-        //Validar email unico
-        if (clienteRepository.existsByEmail(cliente.getEmail())){
-            throw new IllegalArgumentException("Email já cadastrado: "+cliente.getEmail());
-        }
+   //Buscar por email
+   ClienteResponseDTO buscarPorEmail(String email);
 
-        //Validações de negócio
-        validarDadosCliente(cliente);
+   //Atualizar dados do cliente
+   ClienteResponseDTO atualizar(Long id, ClienteRequestDTO dto);
 
-        //Definir como ativo por padrão
-        cliente.setAtivo(true);
+   //Ativar ou desativar
+   ClienteResponseDTO ativarDesativar(Long id);
 
-        return clienteRepository.save(cliente);
-    }
-        //Buscar cliente por ID
-    @Transactional(readOnly = true)
-    public Optional<Cliente> buscarPorId(long id){
-        return clienteRepository.findById(id);
-    }
+   //Listar todos os clientes ativos
+   List<ClienteResponseDTO> listarAtivos();
 
-       // Buscar cliente por email
-    @Transactional(readOnly = true)
-    public Optional<Cliente> buscarPorEmail(String email){
-        return clienteRepository.findByEmail(email);
-    }
-
-      //Listar todos os clientes ativos
-    @Transactional(readOnly = true)
-    public List<Cliente> listarAtivos() {
-      return clienteRepository.findByAtivoTrue();
-    }
-
-    //Atualizar dados do cliente
-    public Cliente atualizar(Long id, Cliente clienteAtualizado) {
-       Cliente cliente = buscarPorId(id)
-               .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado"+ id ));
-
-       //Verificar se email não está sendo usado por outro cliente
-        if (!cliente.getEmail().equals(clienteAtualizado.getEmail()) &&
-            clienteRepository.existsByEmail(clienteAtualizado.getEmail())) {
-        throw new IllegalArgumentException("Email já cadastrado: " + clienteAtualizado.getEmail());
-        }
-
-        // Atualizar campos
-        cliente.setNome(clienteAtualizado.getNome());
-        cliente.setEmail(clienteAtualizado.getEmail());
-        cliente.setTelefone(clienteAtualizado.getTelefone());
-        cliente.setEndereco(clienteAtualizado.getEndereco());
-
-        return clienteRepository.save(cliente);
-    }
-
-    // Inativar cliente (soft delete)
-    public void inativar(Long id) {
-        Cliente cliente = buscarPorId(id)
-                .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado" + id));
-           cliente.inativar();
-           clienteRepository.save(cliente);
-
-    }
-
-    //Buscar clientes por nome
-    @Transactional(readOnly = true)
-    public List<Cliente> buscarPorNome(String nome){
-        return clienteRepository.findByNomeContainingIgnoreCase(nome);
-    }
-
-  //Validações de negocio
-
-    private void validarDadosCliente(Cliente cliente){
-        if (cliente.getNome() == null || cliente.getNome().trim().isEmpty()){
-            throw new IllegalArgumentException("Nome é obrigatorio");
-        }
-        if (cliente.getEmail() == null || cliente.getEmail().trim().isEmpty()){
-            throw new IllegalArgumentException("Email é obrigatorio");
-        }
-        if (cliente.getNome().length() < 2) {
-            throw new IllegalArgumentException("O nome deve conter pelo menos 2 caracteres");
-        }
-    }
+   //Buscar clientes por nome
+   List<ClienteResponseDTO> buscarPorNome(String nome);
 
 }
+

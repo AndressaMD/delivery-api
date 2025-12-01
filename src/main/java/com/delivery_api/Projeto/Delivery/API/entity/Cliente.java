@@ -1,22 +1,19 @@
 package com.delivery_api.Projeto.Delivery.API.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "clientes")
+@Table(name = "cliente")
 public class Cliente {
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,8 +33,15 @@ public class Cliente {
     @Column(nullable = true)
     private Boolean ativo;
 
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Pedido> pedidos;
+
     public void inativar() {
         this.ativo = false;
     }
 
+    public boolean isAtivo() {
+        return this.ativo != null && this.ativo;
+    }
 }
